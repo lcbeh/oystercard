@@ -37,11 +37,17 @@ describe Oystercard do
       expect{subject.touch_in(entry_station)}.to raise_error "Insufficent balance"
     end
 
-    it 'remembers entry station after touch in' do
+    it "instantiates an instance of Journey " do
       subject.top_up(10)
       subject.touch_in(entry_station)
-      expect(subject.entry_station).to eq entry_station
+      expect(subject.current_journey).not_to eq nil
     end
+
+    # it 'remembers entry station after touch in' do
+    #   subject.top_up(10)
+    #   subject.touch_in(entry_station)
+    #   expect(subject.entry_station).to eq entry_station
+    # end
   end
 
   describe '#touch_out' do
@@ -59,17 +65,28 @@ describe Oystercard do
       expect(subject.touch_out(entry_station)).to eq nil
     end
 
-    it 'remembers exit station after touch out' do
+    it 'sets exit station to nil with touch out' do
       subject.top_up(10)
-      subject.touch_in(entry_station)
-      subject.touch_out(exit_station)
-      expect(subject.exit_station).to eq exit_station
+      subject.touch_out("Bank")
+      expect(subject.exit_station).to eq nil
     end
+
+    it "instances an instance of Journey if card not touch in" do
+      subject.touch_out(exit_station)
+      expect(subject.current_journey).not_to eq nil
+    end
+
+    # it 'remembers exit station after touch out' do
+    #   subject.top_up(10)
+    #   subject.touch_in(entry_station)
+    #   subject.touch_out(exit_station)
+    #   expect(subject.exit_station).to eq exit_station
+    # end
   end
 
    describe "#journey_log" do
      let(:journey) { {entry_station: "Bank", exit_station: "Aldgate" }  }
-     it "stores a journey" do
+     xit "stores a journey" do
        subject.top_up(10)
        subject.touch_in("Bank")
        subject.touch_out("Aldgate")
